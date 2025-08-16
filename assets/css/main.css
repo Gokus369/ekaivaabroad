@@ -1958,3 +1958,80 @@ blockquote::after {
     font-size: 13px;
   }
 }
+
+/* ============================= */
+/* ===== Mobile Jank Fixes ===== */
+/* ============================= */
+
+/* Keep header height stable (avoid padding jump) */
+.header,
+.header.scrolled {
+  padding: 16px 0;
+  /* same in both states to prevent reflow */
+}
+
+/* Offset initial content so it doesn't sit under fixed header */
+body {
+  padding-top: 76px;
+  /* tune if your header height differs */
+}
+
+/* Use small viewport height to avoid 100vh resize jitter on mobile URL bar */
+.hero {
+  min-height: 100svh;
+}
+
+/* Make mobile nav independent of header height to avoid reflow while opening/closing */
+.nav.mobile-open {
+  position: fixed;
+  top: 76px;
+  /* match body padding-top */
+  left: 0;
+  right: 0;
+  max-height: calc(100svh - 76px);
+  overflow-y: auto;
+  border-radius: 0 0 20px 20px;
+  z-index: 999;
+  /* under header (1000) but above content */
+}
+
+/* Prevent tap-triggered hover transforms that nudge layout on touch */
+@media (hover: none) and (pointer: coarse) {
+
+  .btn:hover,
+  .service-card:hover,
+  .team-card:hover,
+  .stat-card:hover,
+  .feature-list li:hover .feature-icon,
+  .service-card:hover .service-image img,
+  .team-card:hover .team-image img,
+  .service-card:hover .service-icon,
+  .service-card:hover .service-content h3,
+  .stat-item:hover {
+    transform: none !important;
+  }
+}
+
+/* Reduce sub-pixel flicker during transforms */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Prevent accidental horizontal scrolling from animated elements */
+html,
+body {
+  overflow-x: hidden;
+  overscroll-behavior-x: contain;
+}
+
+/* Smoothen scrolling momentum on mobile without layout shift */
+@media (max-width: 768px) {
+
+  html,
+  body {
+    overscroll-behavior-y: none;
+  }
+}
